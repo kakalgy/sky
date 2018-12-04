@@ -3,16 +3,19 @@ package com.yusj.parrot.types;
 import com.yusj.parrot.annotation.Public;
 
 /**
- * The base interface for normalizable keys. Normalizable keys can create a binary representation
+ * The base interface for normalizable(规范化的) keys. Normalizable keys can create a binary representation
  * of themselves that is byte-wise comparable. The byte-wise comparison of two normalized keys
  * proceeds until all bytes are compared or two bytes at the corresponding positions are not equal.
  * If two corresponding byte values are not equal, the lower byte value indicates the lower key.
  * If both normalized keys are byte-wise identical, the actual key may have to be looked at to
  * determine which one is actually lower.
  * <p>
- * The latter depends on whether the normalized key covers the entire key or is just a prefix of the
+ * The latter(后来的) depends on whether the normalized key covers the entire key or is just a prefix of the
  * key. A normalized key is considered a prefix, if its length is less than the maximal normalized
  * key length.
+ * <p>
+ *
+ * </p>
  */
 @Public
 public interface NormalizableKey<T> extends Comparable<T>, Key<T> {
@@ -20,7 +23,7 @@ public interface NormalizableKey<T> extends Comparable<T>, Key<T> {
     /**
      * Gets the maximal length of normalized keys that the data type would produce to determine
      * the order of instances solely by the normalized key. A value of {@link java.lang.Integer}.MAX_VALUE
-     * is interpreted as infinite.
+     * is interpreted(理解) as infinite(无穷的).
      * <p>
      * For example, 32 bit integers return four, while Strings (potentially unlimited in length) return
      * {@link java.lang.Integer}.MAX_VALUE.
