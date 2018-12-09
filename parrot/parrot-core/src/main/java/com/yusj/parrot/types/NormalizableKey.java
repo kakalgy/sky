@@ -1,6 +1,7 @@
 package com.yusj.parrot.types;
 
 import com.yusj.parrot.annotation.Public;
+import com.yusj.parrot.core.memory.MemorySegment;
 
 /**
  * The base interface for normalizable(规范化的) keys. Normalizable keys can create a binary representation
