@@ -11,6 +11,7 @@
     <modules>
         <module>egret</module>
         <module>parrot</module>
+        <module>magpie</module>
     </modules>
 
     <properties>
