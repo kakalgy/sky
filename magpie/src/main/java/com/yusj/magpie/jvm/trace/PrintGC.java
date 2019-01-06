@@ -12,7 +12,7 @@ public class PrintGC {
             for (int j = 0; j < 1000000; j++) {
                 GCSimpleObject gcSimpleObject = new GCSimpleObject("kaka" + j, 18 + i);
             }
-            System.gc();
+//            System.gc();
         }
     }
 }

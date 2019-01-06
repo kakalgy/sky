@@ -10,7 +10,7 @@ public class NumberParse {
 //        String before1 = "715b00000";
 //        String before1 = "27e80000";
 //        String before1 = "715b00000";
-        String before1 = "5c1000000";
+        String before1 = "715b00000";
 
         long after1 = Long.parseLong(before1, 16);
         System.out.println(after1);
@@ -18,7 +18,7 @@ public class NumberParse {
 //        String before2 = "28d80000";
 //        String before2 = "7c0000000";
 //        String before2 = "71db80000";
-        String before2 = "5d6580000";
+        String before2 = "720580000";
         long after2 = Long.parseLong(before2, 16);
         System.out.println(after2);
 
