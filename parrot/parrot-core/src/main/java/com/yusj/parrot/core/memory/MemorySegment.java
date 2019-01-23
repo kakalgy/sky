@@ -19,16 +19,16 @@ import java.nio.ReadOnlyBufferException;
  * All methods that operate across two memory segments are implemented in this class,
  * to transparently(显然的) handle the mixing of memory segment types.
  *
- * <p>This class fulfills conceptually a similar purpose as Java's {@link java.nio.ByteBuffer}.
+ * <p>This class fulfills(实现) conceptually(概念性) a similar purpose as Java's {@link java.nio.ByteBuffer}.
  * We add this specialized class for various reasons:
  * <ul>
  * <li>It offers additional binary compare, swap, and copy methods.</li>
  * <li>It uses collapsed checks for range check and memory segment disposal(清理).</li>
- * <li>It offers absolute positioning methods for bulk put/get methods, to guarantee
+ * <li>It offers absolute positioning methods for bulk(大量) put/get methods, to guarantee
  * thread safe use.</li>
  * <li>It offers explicit(明确的) big-endian / little-endian access methods, rather than tracking internally
  * a byte order.</li>
- * <li>It transparently and efficiently moves data between on-heap and off-heap variants.</li>
+ * <li>It transparently(显然地) and efficiently moves data between on-heap and off-heap variants(变量).</li>
  * </ul>
  *
  * <p><i>Comments on the implementation</i>:
@@ -40,7 +40,7 @@ import java.nio.ReadOnlyBufferException;
  * function by the just-in-time compiler. The code is grabbed from an Oracle JVM 7 using the
  * hotspot disassembler library (hsdis32.dll) and the jvm command
  * <i>-XX:+UnlockDiagnosticVMOptions -XX:CompileCommand=print,*MemorySegment.putLongBigEndian</i>.
- * Note that this code realizes both the byte order swapping and the reinterpret cast access to
+ * Note that this code realizes both the byte order swapping and the reinterpret(类型转换) cast access to
  * get a long from the byte array.
  *
  * <p><pre>
@@ -71,9 +71,9 @@ import java.nio.ReadOnlyBufferException;
  * {@link org.apache.flink.core.memory.HybridMemorySegment}).
  *
  * <p>That way, all the abstract methods in the MemorySegment base class have only one loaded
- * actual implementation. This is easy for the JIT to recognize through class hierarchy analysis,
- * or by identifying that the invocations are monomorphic (all go to the same concrete
- * method implementation). Under these conditions, the JIT can perfectly inline methods.
+ * actual implementation. This is easy for the JIT to recognize through class hierarchy(层级) analysis,
+ * or by identifying that the invocations(调用) are monomorphic(单例) (all go to the same concrete
+ * method implementation). Under these conditions, the JIT can perfectly inline(内联) methods.
  */
 @Internal
 public abstract class MemorySegment {

@@ -7,6 +7,8 @@ import com.yusj.parrot.core.memory.DataOutputView;
 import java.io.IOException;
 
 /**
+ * 深拷贝
+ * <p/>
  * Interface to be implemented by basic types that support to be copied efficiently.
  */
 @Public

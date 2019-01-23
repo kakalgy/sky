@@ -21,9 +21,14 @@ import static com.yusj.parrot.util.Preconditions.checkNotNull;
 @PublicEvolving
 public final class StringUtils {
 
+    /**
+     * 十六进制字符
+     */
     private static final char[] HEX_CHARS = {'0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f'};
 
     /**
+     * 将byte[]转换为十六进制字符串
+     * <p/>
      * Given an array of bytes it will convert the bytes to a hex string
      * representation of the bytes.
      *
@@ -40,6 +45,12 @@ public final class StringUtils {
         int length = end - start;
         char[] out = new char[length * 2];
 
+        /*
+         *基本思想：
+         *由於一个byte是8位，十六进制0xXX的前第一位是byte前4位，第二位是byte后4位
+         *&操作得到这四位的二进制
+         *>>>无符号右移 只得到四位的值
+         */
         for (int i = start, j = 0; i < end; i++) {
             out[j++] = HEX_CHARS[(0xF0 & bytes[i]) >>> 4];
             out[j++] = HEX_CHARS[0x0F & bytes[i]];
@@ -49,6 +60,8 @@ public final class StringUtils {
     }
 
     /**
+     * 将byte[]转换为十六进制字符串
+     * <p/>
      * Given an array of bytes it will convert the bytes to a hex string
      * representation of the bytes.
      *
@@ -60,6 +73,8 @@ public final class StringUtils {
     }
 
     /**
+     * 16进制字符串转换为byte[]
+     * <p/>
      * Given a hex string this will return the byte array corresponding to the
      * string .
      *
@@ -69,6 +84,7 @@ public final class StringUtils {
      */
     public static byte[] hexStringToByte(final String hex) {
         final byte[] bts = new byte[hex.length() / 2];
+        //基本思想：通过for循环，每次截断字符串的2位来转换为16进制对应的int
         for (int i = 0; i < bts.length; i++) {
             bts[i] = (byte) Integer.parseInt(hex.substring(2 * i, 2 * i + 2), 16);
         }
@@ -76,6 +92,9 @@ public final class StringUtils {
     }
 
     /**
+     * 判断对象o是否为数组，若是数组，调用{@link #arrayToString(Object)}，否则直接调用对象的
+     * toString()方法
+     * <p/>
      * This method calls {@link Object#toString()} on the given object, unless the
      * object is an array. In that case, it will use the {@link #arrayToString(Object)}
      * method to create a string representation of the array that includes all contained
@@ -96,6 +115,9 @@ public final class StringUtils {
     }
 
     /**
+     * 判断参数对象是否为数组，若是数组，再判断属于哪一种数组（基本数据类型还是对象），
+     * 再轮询调用toString()方法拼接成字符串
+     * <p/>
      * Returns a string representation of the given array. This method takes an Object
      * to allow also all types of primitive type arrays.
      *
@@ -144,6 +166,8 @@ public final class StringUtils {
     }
 
     /**
+     * 将字符串中的控制字符（\b, \t, \n, \f, \r）替换为两个字符(\b, \t, \n, \f, \r)
+     * <p/>
      * Replaces control characters by their escape-coded version. For example,
      * if the string contains a line break character ('\n'), this character will
      * be replaced by the two characters backslash '\' and 'n'. As a consequence, the
@@ -183,6 +207,7 @@ public final class StringUtils {
     }
 
     /**
+     * <p/>
      * Creates a random string with a length within the given interval. The string contains only characters that
      * can be represented as a single code point.
      *
@@ -296,6 +321,8 @@ public final class StringUtils {
     }
 
     /**
+     *
+     * <p/>
      * Reads a String from the given input. The string may be null and must have been written with
      * {@link #writeNullableString(String, DataOutputView)}.
      *
@@ -313,6 +340,8 @@ public final class StringUtils {
     }
 
     /**
+     * 判断字符串是否为null或空字符串或者全部为空格
+     * <p/>
      * Checks if the string is null, empty, or contains only whitespace characters.
      * A whitespace character is defined via {@link Character#isWhitespace(char)}.
      *
@@ -334,6 +363,8 @@ public final class StringUtils {
     }
 
     /**
+     * 返回s1+s2
+     * <p/>
      * If both string arguments are non-null, this method concatenates them with ' and '.
      * If only one of the arguments is non-null, this method returns the non-null argument.
      * If both arguments are null, this method returns null.

@@ -3,6 +3,8 @@ package com.yusj.parrot.types;
 import com.yusj.parrot.annotation.Public;
 
 /**
+ *
+ *
  * @param <T>
  */
 @Public

@@ -13,12 +13,14 @@ import java.nio.CharBuffer;
 import static com.yusj.parrot.util.Preconditions.checkNotNull;
 
 /**
+ * StringValue封装了{@link String}的基本功能，并且实现了{@link Key}的各种接口，是一种可序列化的，可改变的
+ * <p>
  * Mutable string data type that implements the Key interface.
  * StringValue encapsulates the basic functionality of a {@link String}, in a serializable and mutable way.
  * <p>
- * The mutability allows to reuse the object inside the user code, also across invocations. Reusing a StringValue object
- * helps to increase the performance, as string objects are rather heavy-weight objects and incur a lot of garbage
- * collection overhead, if created and destroyed en masse.
+ * The mutability allows to reuse the object inside the user code, also across invocations(调用). Reusing a StringValue
+ * object helps to increase the performance, as string objects are rather heavy-weight objects and incur(引发) a lot of
+ * garbage collection overhead(开销), if created and destroyed en masse.
  *
  * @see NormalizableKey
  * @see java.lang.String
@@ -31,10 +33,19 @@ public class StringValue implements NormalizableKey<StringValue>, CharSequence, 
 
     private static final char[] EMPTY_STRING = new char[0];
 
+    /**
+     * 00000000 00000000 00000000 10000000=128
+     */
     private static final int HIGH_BIT = 0x1 << 7;
 
+    /**
+     * 00000000 00000000 00100000 00000000=8192
+     */
     private static final int HIGH_BIT2 = 0x1 << 13;
 
+    /**
+     * 00000000 00000000 00000000 11000000=192
+     */
     private static final int HIGH_BIT2_MASK = 0x3 << 6;
 
 
@@ -44,13 +55,12 @@ public class StringValue implements NormalizableKey<StringValue>, CharSequence, 
 
     private int hashCode;        // cache for the hashCode
 
-
     // --------------------------------------------------------------------------------------------
     //                                      Constructors
     // --------------------------------------------------------------------------------------------
 
     /**
-     * Initializes the encapsulated String object with an empty string.
+     * Initializes the encapsulated(封装的) String object with an empty string(即new char[0]).
      */
     public StringValue() {
         this.value = EMPTY_STRING;
