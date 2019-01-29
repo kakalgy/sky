@@ -44,7 +44,7 @@ abstract public class MemorySegment {
     protected final byte[] heapMemory;
 
     /**
-     * 数据的地址，相对于堆内存字节数组。 如果堆内存字节数组为空(heapMemory == null)，则它将成为堆外的绝对内存地址。
+     * 堆外内存数据的地址，相对于堆内存字节数组。 如果堆内存字节数组为空(heapMemory == null)，则它将成为堆外的绝对内存地址。
      */
     protected long address;
 
@@ -202,6 +202,121 @@ abstract public class MemorySegment {
      */
     public Object getOwner() {
         return owner;
+    }
+
+
+    //------------------------------------------------------------------------
+    //------------------------------------------------------------------------
+    //
+    //随机访问get（）和put（）方法
+    //
+    //------------------------------------------------------------------------
+    //------------------------------------------------------------------------
+
+    //------------------------------------------------------------------------
+    // 实施注意事项：
+    //      我们尝试尽可能多地进行检查。 我们需要遵守以下规则，以防止段错误：
+    //
+    //  - 在检查和使用之前，将可变字段添加到堆栈中。
+    //    这可以保护我们免受并发修改，这些修改使指针无效
+    //  - 使用减法进行范围检查，因为它们是可容忍的
+    //------------------------------------------------------------------------
+
+    /**
+     * 读取给定位置的字节。
+     *
+     * @param index 将要被读出的字节的位置
+     * @return 读出的字节
+     * @throws IndexOutOfBoundsException 如果索引为负或大于或等于内存段的大小，则抛出异常。
+     */
+    public abstract byte get(int index);
+
+    /**
+     * 在给定位置将给定字节写入此缓冲区。
+     *
+     * @param index 写入字节的索引。
+     * @param b     将要写入的字节
+     * @throws IndexOutOfBoundsException 如果索引为负或大于或等于内存段的大小，则抛出异常。
+     */
+    public abstract void put(int index, byte b);
+
+    /**
+     * 批量获取方法。将dst.length长度的内存从指定位置index开始复制到目标内存dst。
+     *
+     * @param index 读取第一个字节的位置。
+     * @param dst   内存将被复制到的目的内存。
+     * @throws IndexOutOfBoundsException 如果索引为负数或者太大以至于索引index与MemorySegment(内存段)末尾之间的数据不足以填充目标数组，则抛出异常。
+     */
+    public abstract void get(int index, byte[] dst);
+
+    /**
+     * 批量写入方法。 将src.length长度的内存从源内存src复制到从指定位置开始的内存段。
+     *
+     * @param index MemorySegment内存段数组中的索引，写入数据的位置。
+     * @param src   要从中复制数据的源内存数组。
+     * @throws IndexOutOfBoundsException 如果索引是为负数，或者太大以至于数组大小超过索引和内存段末尾之间的内存量，则抛出异常。
+     */
+    public abstract void put(int index, byte[] src);
+
+    /**
+     * 批量获取方法。从dst给定的偏移量(offset)开始，将指定长度(length)的内存复制到目标内存dst，。
+     *
+     * @param index  读取第一个字节的位置。
+     * @param dst    内存将被复制到的目的内存。
+     * @param offset 目标内存中的复制偏移量。
+     * @param length 需要拷贝的字节数
+     * @throws IndexOutOfBoundsException 如果索引为负，或太大以致请求的字节数超过了索引和内存段末尾之间的内存量。
+     */
+    public abstract void get(int index, byte[] dst, int offset, int length);
+
+    /**
+     * 批量写入方法。 将从源内存src中的偏移的位置offset开始的长度为length的内存复制到从指定索引index开始的MemorySegment(内存段)中。
+     *
+     * @param index  MemorySegment内存段数组中的索引，写入数据的位置。
+     * @param src    要从中复制数据的源内存数组。
+     * @param offset 开始复制的源数组中的偏移量。
+     * @param length 需要拷贝的字节数
+     * @throws IndexOutOfBoundsException 如果索引为负，或太大以致请求的字节数超过了索引和内存段末尾之间的内存量。
+     */
+    public abstract void put(int index, byte[] src, int offset, int length);
+
+    /**
+     * 在给定位置读取一个字节并返回其布尔表示。
+     *
+     * @param index 将要被读出的字节的位置
+     * @return 读出的字节的布尔表示
+     * @throws IndexOutOfBoundsException 如果索引为负数，或者MemorySegment段大小减1，则抛出异常。
+     */
+    public abstract boolean getBoolean(int index);
+
+    /**
+     * 在给定位置将包含字节值的一个字节写入此缓冲区。
+     *
+     * @param index 写入内存的位置。
+     * @param value 要写入的char值。
+     * @throws IndexOutOfBoundsException 如果索引为负数，或者MemorySegment段大小减1，则抛出异常。
+     */
+    public abstract void putBoolean(int index, boolean value);
+
+    /**
+     * 以系统的本机ByteOrder顺序从给定位置读取char值。
+     *
+     * @param index 从中读取内存的位置。
+     * @return 给定位置的char值
+     * @throws IndexOutOfBoundsException 如果索引为负数，或者MemorySegment段大小减2，则抛出异常。
+     */
+    @SuppressWarnings("restriction")
+    public final char getChar(int index) {
+        final long pos = address + index;
+        if (index >= 0 && pos <= addressLimit - 2) {
+            return UNSAFE.getChar(heapMemory, pos);
+        } else if (address > addressLimit) {
+            //见isFreed()方法
+            throw new IllegalStateException("This segment has been freed.");
+        } else {
+            //索引不合法
+            throw new IndexOutOfBoundsException();
+        }
     }
 
 
